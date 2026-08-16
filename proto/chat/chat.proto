@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package chat;
+
+option go_package = "github.com/txltedxgod/grpc-stream-hub/proto/chat";
+
+service ChatStreamService {
+  // Bidirectional streaming endpoint for real-time pub/sub messaging
+  rpc StreamMessages (stream MessageRequest) returns (stream MessageResponse);
+}
+
+message MessageRequest {
+  string room_id = 1;
+  string sender = 2;
+  string content = 3;
+  int64 timestamp = 4;
+}
+
+message MessageResponse {
+  string message_id = 1;
+  string room_id = 2;
+  string sender = 3;
+  string content = 4;
+  int64 timestamp = 5;
+}
