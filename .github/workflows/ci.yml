@@ -10,15 +10,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
           go-version: '1.22'
 
-      - name: Build Server
-        run: go build -v ./server
+      - name: Verify Dependencies
+        run: go mod verify
 
-      - name: Build Client
-        run: go build -v ./client
+      - name: Run Go Vet
+        run: go vet ./...
+
+      - name: Build All Packages
+        run: go build -v ./...
+
+      - name: Run Tests with Race Detector
+        run: go test -v -race ./...
