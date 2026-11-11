@@ -1,18 +1,7 @@
 package main
 
 import (
-	"context"
-	"fmt"
-	"io"
-	"log"
-	"net"
 	"sync"
-	"time"
-
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
-	"google.golang.org/grpc/status"
 )
 
 type Hub struct {
@@ -39,8 +28,10 @@ func (h *Hub) Unsubscribe(roomID string, ch chan *MessageResponse) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
 	if subs, ok := h.clients[roomID]; ok {
-		delete(subs, ch)
-		close(ch)
+		if _, exists := subs[ch]; exists {
+			delete(subs, ch)
+			close(ch)
+		}
 		if len(subs) == 0 {
 			delete(h.clients, roomID)
 		}

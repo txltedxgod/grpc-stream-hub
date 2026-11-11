@@ -3,10 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io"
 	"log"
 	"net"
-	"time"
 
 	"google.golang.org/grpc"
 )
@@ -36,6 +34,9 @@ func main() {
 	}
 
 	hub := NewHub()
+	if hub == nil {
+		log.Fatal("failed to initialize hub")
+	}
 	grpcServer := grpc.NewServer(
 		grpc.StreamInterceptor(AuthStreamInterceptor),
 	)
